@@ -1,0 +1,23 @@
+# Local-only values for the published logic-operator-stack chart.
+# Vector's watch namespace is patched by `make helm-up` so it can collect
+# structured logs from WORKFLOW_NAMESPACE (default: default).
+logicPlatform:
+  dataIndex:
+    enabled: true
+    vector:
+      enabled: true
+  workflowGateway:
+    replicas: 1
+    ingress:
+      enabled: true
+      host: localhost
+      className: nginx
+
+postgresql:
+  auth:
+    username: logicflow
+    password: logicflow
+    database: logicflow
+  persistence:
+    enabled: true
+    size: 1Gi

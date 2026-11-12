@@ -1,0 +1,19 @@
+document:
+  dsl: '1.0.0'
+  namespace: examples
+  name: hello-world
+  version: '1.0.0'
+input:
+  schema:
+    format: json
+    document:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+do:
+  - greet:
+      set:
+        message: '${ "Hi, " + .name + "!" }'
