@@ -21,6 +21,8 @@ HELM_RELEASE ?= osl-v2-local
 OSL_VERSION ?= 2.0.0-Alpha3
 
 INGRESS_NGINX_VERSION ?= v1.12.2
+# Keep local ingress worker count conservative; auto detected six and failed to create four workers.
+INGRESS_NGINX_WORKERS ?= 1
 CERT_MANAGER_VERSION ?= v1.16.3
 INGRESS_NGINX_URL ?= https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-$(INGRESS_NGINX_VERSION)/deploy/static/provider/kind/deploy.yaml
 CERT_MANAGER_URL ?= https://github.com/cert-manager/cert-manager/releases/download/$(CERT_MANAGER_VERSION)/cert-manager.yaml
@@ -55,10 +57,13 @@ kind-up: check-tools ## Create the Podman-backed Kind cluster and its ingress/ce
 		KIND_EXPERIMENTAL_PROVIDER=$(KIND_PROVIDER) $(KIND) create cluster --name $(KIND_CLUSTER) --config kind-config.yaml; \
 	fi
 	$(KUBECTL) $(KUBECTL_CONTEXT) apply -f $(INGRESS_NGINX_URL)
+	$(KUBECTL) $(KUBECTL_CONTEXT) patch configmap ingress-nginx-controller \
+		--namespace ingress-nginx --type=merge \
+		--patch '{"data":{"worker-processes":"$(INGRESS_NGINX_WORKERS)"}}'
 	@for i in $$(seq 1 30); do \
 		$(KUBECTL) $(KUBECTL_CONTEXT) get deployment -n ingress-nginx ingress-nginx-controller >/dev/null 2>&1 && break || sleep 2; \
 	done
-	$(KUBECTL) $(KUBECTL_CONTEXT) wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=180s
+	$(KUBECTL) $(KUBECTL_CONTEXT) wait --namespace ingress-nginx --for=condition=available deployment/ingress-nginx-controller --timeout=180s
 	$(KUBECTL) $(KUBECTL_CONTEXT) apply -f $(CERT_MANAGER_URL)
 	@for i in $$(seq 1 30); do \
 		$(KUBECTL) $(KUBECTL_CONTEXT) get deployment -n cert-manager cert-manager >/dev/null 2>&1 && break || sleep 2; \
