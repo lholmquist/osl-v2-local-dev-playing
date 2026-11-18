@@ -90,3 +90,8 @@ The [ingress-nginx ConfigMap documentation](https://kubernetes.github.io/ingress
 The `osl-v2-local` cluster is running the OSL stack and Hello World workflow. The live ingress ConfigMap has one worker, and the Gateway GET and POST checks passed after that change. The Makefile now applies the same setting on future setups; verify it during the next clean-cluster run.
 
 To use the current Makefile from the repository directory, run `make up`. Use `make workflows WORKFLOWS_DIR=/absolute/path/to/workflows` to load another directory later, and `make invoke WORKFLOW=hello-world VERSION=1.0.0 INPUT='{"name":"World"}'` to invoke the example through the Gateway. Run `make status` to inspect resources, `make down` to uninstall the Helm release while keeping Kind, and `make kind-delete` to remove the cluster.
+
+## Follow-up for the next session (November 16, 2026)
+
+- Use the published Alpha 3 setup for now. Revisit Alpha 4 after its CRD bundle and chart are published, then verify the setup before starting workflow development.
+- Review LogicFlowRuntime choices: how imported LogicFlowDefinitions select a runtime, when one shared runtime is enough versus when to use multiple runtimes, and how Alpha 4 `platformRef` and `persistenceMode` affect persistence.

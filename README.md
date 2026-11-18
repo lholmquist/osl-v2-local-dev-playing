@@ -43,7 +43,7 @@ Override the release version if needed:
 make up OSL_VERSION=2.0.0-Alpha3
 ```
 
-The default Workflow namespace is `default`, so the URL path is `/v1/runtime/default/...`. The LogicPlatform and Data Index run in `logic-operator-system`. The setup configures Vector to watch the workflow namespace, which is important when these namespaces differ.
+The default Workflow namespace is `default`, so the URL path is `/v1/runtime/default/...`. The `LogicPlatform`, operator, PostgreSQL, and Data Index run in `logic-operator-system`. The setup configures Vector to watch the workflow namespace, which is important when these namespaces differ.
 
 Change the workflow namespace or Runner resource name with:
 
