@@ -1,0 +1,8 @@
+document:
+  dsl: '1.0.0'
+  namespace: examples
+  name: random-success-or-error
+  version: '1.0.0'
+do:
+  - evaluateCurrentSecond:
+      set: '${ if ((now | floor) % 60) < 30 then (8 / 0) else 8 end }'
