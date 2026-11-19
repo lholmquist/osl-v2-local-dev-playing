@@ -1,0 +1,31 @@
+document:
+  dsl: '1.0.0'
+  namespace: examples
+  name: yamlgreet-separate-schema
+  version: '1.0.0'
+input:
+  schema:
+    format: json
+    resource:
+      endpoint: file:///deployments/schemas/yamlgreet-separate-schema.json
+do:
+  - chooseGreeting:
+      switch:
+        - spanish:
+            when: .language == "Spanish"
+            then: setSpanishGreeting
+        - default:
+            then: setEnglishGreeting
+  - setSpanishGreeting:
+      set:
+        name: ${ .name }
+        greeting: 'Saludos desde YAML Workflow, '
+      then: buildGreeting
+  - setEnglishGreeting:
+      set:
+        name: ${ .name }
+        greeting: 'Hello from YAML Workflow, '
+      then: buildGreeting
+  - buildGreeting:
+      set:
+        message: '${ .greeting + .name }'

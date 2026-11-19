@@ -1,0 +1,23 @@
+{
+  "spec": {
+    "podTemplate": {
+      "volumes": [
+        {
+          "name": "yamlgreet-schema",
+          "configMap": {
+            "name": "yamlgreet-separate-schema"
+          }
+        }
+      ],
+      "container": {
+        "volumeMounts": [
+          {
+            "name": "yamlgreet-schema",
+            "mountPath": "/deployments/schemas",
+            "readOnly": true
+          }
+        ]
+      }
+    }
+  }
+}
